@@ -9,15 +9,17 @@ updater = Updater(TOKEN)
 bot = Bot(TOKEN)
 dispatcher = updater.dispatcher
 
+
 def start(update:Update, context: CallbackContext):
     context.bot.send_message(update.effective_chat.id, 'Всем привет вы на канале "Казино"\nВведите вашу ставку:')
-       
+
 
 def gameboard():
     board1 = ['🙊', '🙊', '🙊', '🙊', '😘','😘', '😘', '❤️', '❤️', '💋']
     board2 = [choice(board1) for i in range(12)]
 
     return board2
+
 
 def output_gameboard(board2: list):
     """Возвращает что то"""
@@ -29,6 +31,7 @@ def output_gameboard(board2: list):
     board_str = '\n'.join(board_str)    
     return board_str
 
+
 def win_coeeff(board2):
     total_coeff = 0
     coeff_dict = {
@@ -37,16 +40,16 @@ def win_coeeff(board2):
                   '❤️': [3.5, 3],
                   '💋': [4.5, 4],
                  }
-    
+
     for i in range(0, len(board2), 4):
         if (board2[i] == board2[i+1] == 
             board2[i+2] == board2[i+3]):
             total_coeff += coeff_dict[board2[i]][0]
-    
+
     for i in range(len(board2) // 3):
         if board2[i] == board2[i+4] == board2[i+8]:
             total_coeff += coeff_dict[board2[i]][1]
-    
+
     return total_coeff
 
 #💋❤️😘🙊
@@ -58,6 +61,7 @@ def game(update:Update, context: CallbackContext):
                              output_gameboard(board))
     context.bot.send_message(update.effective_chat.id, 
                              win_coeeff(board) * bet)
+
 
 start_handler = CommandHandler('start', start)
 game_handler = MessageHandler(Filters.text, game)
